@@ -1,0 +1,43 @@
+käyttäjä->selain:
+note left of selain
+käyttäjä kirjoittaa osoiteriville
+https://fullstack-exampleapp.herokuapp.com/spa
+end note
+selain->palvelin:
+note right of selain
+GET https://fullstack-exampleapp.herokuapp.com/spa
+end note
+palvelin->selain:
+note left of palvelin:
+STATUS CODE 200 OK, html-tiedosto
+end note;
+selain->palvelin:
+note right of selain
+GET https://fullstack-exampleapp.herokuapp.com/main.css
+end note
+palvelin->selain:
+note left of palvelin:
+STATUS CODE 200 OK, css-tiedosto
+end note;
+selain->palvelin:
+note right of selain
+GET https://fullstack-exampleapp.herokuapp.com/spa.js
+end note
+palvelin->selain:
+note left of palvelin:
+STATUS CODE 200 OK, javascript-tiedosto
+end note;
+selain->palvelin:
+note right of selain
+GET https://fullstack-exampleapp.herokuapp.com/data.json
+end note
+palvelin->selain:
+note left of palvelin:
+STATUS CODE 200 OK, json-data
+end note;
+selain->käyttäjä:
+note left of selain
+Selain näyttää käyttäjälle html-tiedoston pohjan,
+johon on lisätty javascript-ohjelman avulla data.json-tiedoston
+data.
+end note;

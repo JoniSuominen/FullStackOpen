@@ -1,6 +1,6 @@
-kayttaja->selain:
+käyttäja->selain:
 note left of selain
-kayttaja kirjoittaa osoiteriville
+käyttäjä kirjoittaa osoiteriville
 https://fullstack-exampleapp.herokuapp.com/notes
 end note
 selain->palvelin:
@@ -43,7 +43,7 @@ note left of palvelin:
 STATUS CODE 200 OK,
 saadaan json-tiedosto
 end note;
-selain->kayttaja:
+selain->käyttäjä:
 note left of selain
 selain näyttää käyttäjälle palvelimen
 palauttaman html-tiedoston sisällön, jossa näkyy 

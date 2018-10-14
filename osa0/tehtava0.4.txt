@@ -1,0 +1,62 @@
+käyttäjä->selain:
+note left of selain
+käyttäjä syöttää selaimen lataamaan
+lomakkeeseen muistiinpanon ja 
+painaa talleta
+end note;
+selain->palvelin:
+note left of palvelin:
+POST https://fullstack-exampleapp.herokuapp.com/new_note
+Selain lähettää palvelimelle 
+käyttäjän syöttämän muistiinpanon.
+Palvelin tallentaa muistiinpanon palvelinkoodissa
+olevaan notes-taulukkoon.
+end note;
+palvelin -> selain:
+note left of palvelin:
+status code 302, redirect
+Palvelin ohjaa selaimen lataamaan headerin
+Location-attribuutin kertomaan paikkaan.
+end note;
+selain->palvelin:
+note right of selain
+GET https://fullstack-exampleapp.herokuapp.com/notes
+end note
+palvelin->selain:
+note left of palvelin:
+STATUS CODE 200 OK, html-tiedosto
+end note;
+selain->palvelin:
+note right of selain
+GET https://fullstack-exampleapp.herokuapp.com/main.css
+end note
+palvelin->selain:
+note left of palvelin:
+STATUS CODE 200 OK, css-tiedosto
+end note;
+selain->palvelin:
+note right of selain
+GET https://fullstack-exampleapp.herokuapp.com/main.js
+end note
+palvelin->selain:
+note left of palvelin:
+STATUS CODE 200 OK, javascript-tiedosto
+end note;
+selain->palvelin:
+note right of selain
+GET https://fullstack-exampleapp.herokuapp.com/data.json
+end note
+palvelin->selain:
+note left of palvelin:
+STATUS CODE 200 OK, json-data
+end note;
+selain->käyttäjä:
+note left of selain
+Selain näyttää käyttäjälle palvelimen
+palauttaman html-tiedoston sisällön, jossa näkyy
+html-tiedoston pohjan lisäksi javascript-ohjelman
+generoima lista data.json-tiedoston muistiinpanoista.
+end note;
+
+
+

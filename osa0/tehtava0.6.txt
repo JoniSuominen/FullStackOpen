@@ -1,0 +1,29 @@
+käyttäjä->selain:
+note left of käyttäjä
+Käyttäjä on jo saapunut verkkosivustolle
+sekä ladannut html-, css- ja javascript-tiedostot sekä
+aiemmat muistiinpanot json-datana.
+end note;
+note left of selain
+Käyttäjä syöttää selaimessa
+lomakkeeseen muistiinpanon ja 
+painaa talleta. Javascript-ohjelma estää
+sivuston uudelleenlataamisen.
+end note;
+selain->palvelin:
+note left of palvelin:
+POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+Selain lähettää palvelimelle käyttäjän syöttämän muistiinpanon.
+Palvelin tallentaa muistiinpanon palvelinkoodissa olevaan notes-taulukkoon.
+end note;
+palvelin -> selain:
+note left of palvelin:
+status code 201, new resource
+Palvelin kertoo, ettei selaimen tarvitse ladata verkkosivua uudelleen
+end note;
+selain->käyttäjä:
+note left of selain
+Sivulle saavuttaessa ladattu javascript-ohjelma lisää muistiinpanon
+omaan notes-taulukkoonsa sekä muistiinpanojen listaan
+html-tiedostossa
+end note;
