@@ -13,13 +13,11 @@ const Otsikko = (kurssi) => {
 
 // huolehtii kurssien sisällön ja tehtävämäärän renderöinnistä
 const Sisalto = (osat) => {
-    console.log(osat.osa1.nimi)
-    console.log(osat.osa1.tehtavia)
     return (
         <div>
-            <Osa sisalto={osat.osa1}/>
-            <Osa sisalto={osat.osa2}/>
-            <Osa sisalto={osat.osa3}/>
+            <Osa sisalto={osat.osat[0]}/>
+            <Osa sisalto={osat.osat[1]}/>
+            <Osa sisalto={osat.osat[2]}/>
         </div>
     )
 }
@@ -31,34 +29,36 @@ const Osa = (tieto) => {
     )
 }
 // huolehtii kurssien lukumäärän renderöinnistä
-const Yhteensa = (maara) => {
+const Yhteensa = (osat) => {
     return (
-        <p>Yhteensä {maara.maara} tehtävää</p>
+        <p>Yhteensä {osat.osat[0].tehtavia + osat.osat[1].tehtavia + osat.osat[2].tehtavia} tehtävää</p>
     )
 }
 
 const App = () => {
     const kurssi = 'Half-stack -sovelluskehitys'
-    const osa1 = {
-        nimi: 'Reactin perusteet',
-        tehtavia: 10
-    }
+    const osat = [
+        {
+            nimi: 'Reactin perusteet',
+            tehtavia: 10
+        },
 
-    const osa2 = {
-        nimi: 'Tiedonvälitys propseilla',
-        tehtavia: 7
-    }
+        {
+            nimi: 'Tiedonvälitys propseilla',
+            tehtavia: 7
+        },
 
-    const osa3 = {
-        nimi: 'Komponenttien tila',
-        tehtavia: 14
-    }
+        {
+            nimi: 'Komponenttien tila',
+            tehtavia: 14
+        }
+    ]
 
     return (
         <div>
             <Otsikko kurssinNimi={kurssi}/>
-            <Sisalto osa1={osa1} osa2={osa2} osa3={osa3}/>
-            <Yhteensa maara={osa1.tehtavia + osa2.tehtavia + osa3.tehtavia}/>
+            <Sisalto osat={osat}/>
+            <Yhteensa osat={osat}/>
         </div>
     )
 }
