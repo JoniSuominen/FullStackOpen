@@ -15,10 +15,17 @@ const Otsikko = (kurssi) => {
 const Sisalto = (osat) => {
     return (
         <div>
-            <p>{osat.osa1} {osat.tehtavia1}</p>
-            <p>{osat.osa2} {osat.tehtavia2}</p>
-            <p>{osat.osa3} {osat.tehtavia3}</p>
+            <Osa sisalto={osat.osa1} tehtavia={osat.tehtavia1}/>
+            <Osa sisalto={osat.osa2} tehtavia={osat.tehtavia2}/>
+            <Osa sisalto={osat.osa3} tehtavia={osat.tehtavia3}/>
         </div>
+    )
+}
+
+// huolehtii yksittäisten osien renderöinnin
+const Osa = (tieto) => {
+    return (
+        <p> {tieto.sisalto} {tieto.tehtavia}</p>
     )
 }
 // huolehtii kurssien lukumäärän renderöinnistä
