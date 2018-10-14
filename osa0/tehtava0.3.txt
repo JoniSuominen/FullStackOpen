@@ -1,0 +1,55 @@
+kayttaja->selain:
+note left of selain
+kayttaja kirjoittaa osoiteriville
+https://fullstack-exampleapp.herokuapp.com/notes
+end note
+selain->palvelin:
+note right of selain
+GET https://fullstack-exampleapp.herokuapp.com/notes
+haetaan html-tiedosto
+end note
+palvelin->selain:
+note left of palvelin:
+STATUS CODE 200 OK,
+saadaan html-tiedosto
+end note;
+selain->palvelin:
+note right of selain
+GET https://fullstack-exampleapp.herokuapp.com/main.css
+haetaan css-tiedosto
+end note
+palvelin->selain:
+note left of palvelin:
+STATUS CODE 200 OK, 
+saadaan css-tiedosto
+end note;
+selain->palvelin:
+note right of selain
+GET https://fullstack-exampleapp.herokuapp.com/main.js
+haetaan javascript-tiedosto
+end note
+palvelin->selain:
+note left of palvelin:
+STATUS CODE 200 OK,
+saadaan javascript-tiedosto
+end note;
+selain->palvelin:
+note right of selain
+GET https://fullstack-exampleapp.herokuapp.com/data.json
+haetaan json-tiedosto
+end note
+palvelin->selain:
+note left of palvelin:
+STATUS CODE 200 OK,
+saadaan json-tiedosto
+end note;
+selain->kayttaja:
+note left of selain
+selain näyttää käyttäjälle palvelimen
+palauttaman html-tiedoston sisällön, jossa näkyy 
+palvelimelta json-data javascript- ja css-tiedostojen
+ansiosta.
+end note;
+
+
+
