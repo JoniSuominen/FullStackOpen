@@ -42,21 +42,35 @@ class App extends React.Component {
 // vastaa tilastojen näyttämisestä
 const Statistics = (props) => {
     const kaikki = props.tila.hyva + props.tila.huono + props.tila.neutraali
+    const keskiarvo = ((props.tila.hyva - props.tila.huono) / kaikki).toFixed(1)
     if (kaikki > 0) {
         return (
             <div>
-                <Statistic text="hyvä" arvo={(props.tila.hyva / kaikki) * 100 + "%"}/>
-                <Statistic text="neutraali" arvo={(props.tila.neutraali / kaikki) * 100 + "%"}/>
-                <Statistic text="huono" arvo={(props.tila.huono / kaikki) * 100 + "%"}/>
-
+            <div>
+                <h1>statistiikka</h1>
+            </div>
+            <div>
+                <table>
+                    <tbody>
+                        <Statistic text="hyvä" arvo={props.tila.hyva}/>
+                        <Statistic text="neutraali" arvo={props.tila.neutraali}/>
+                        <Statistic text="huono" arvo={props.tila.huono}/>
+                        <Statistic text="keskiarvo" arvo={keskiarvo}/>
+                        <Statistic text="positiivisia" arvo={percentageOf(props.tila.hyva, kaikki)}/>
+                    </tbody>
+                </table>
+            </div>
             </div>
         )
     } 
     return (
         <div>
-        <Statistic text="hyvä" arvo='0%'/>
-        <Statistic text="neutraali" arvo='0%'/>
-        <Statistic text="huono" arvo='0%'/>
+        <div>
+            <h1>statistiikka</h1>
+        </div>
+            <div> 
+                <p>ei yhtään palautetta annettu </p>
+            </div>
         </div>
     )
 }
@@ -64,9 +78,17 @@ const Statistics = (props) => {
 // vastaa yksittäisestä tilastosta
 const Statistic = (props) => {
     return (
-        <div> {props.text} {props.arvo}</div>
+        <tr><td>{props.text}</td><td>{props.arvo}</td></tr>
     )
 
+}
+
+const percentageOf = (maara, kaikki) => {
+    if (maara === 0) {
+        return 0 + " %"
+    } else {
+        return (maara / kaikki * 100).toFixed(1) + " %"
+    }
 }
 
 // vastaa nappien näyttämisestä
