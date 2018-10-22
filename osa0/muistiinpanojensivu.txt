@@ -1,0 +1,31 @@
+kayttaja->selain:
+note left of selain
+kayttaja kirjoittaa selaimensa osoiteriville
+https://fullstack-exampleapp.herokuapp.com/notes
+end note
+selain->palvelin: GET https://fullstack-exampleapp.herokuapp.com/notes
+note right of selain:
+Haetaan sivuston pohjalla oleva muokkaamaton html-tiedosto
+end note
+palvelin -> selain: STATUS CODE 200 OK, html-tiedosto
+selain->palvelin: GET https://fullstack-exampleapp.herokuapp.com/main.css
+note right of selain:
+Haetaan sivun tyyliä muokkaava css-tiedosto
+end note
+palvelin -> selain: STATUS CODE 200 OK, css-tiedosto
+selain->palvelin: GET https://fullstack-exampleapp.herokuapp.com/main.js
+note right of selain:
+Haetaan sivuston toiminnallisuutta muokkaava javascript-tiedosto
+end note
+palvelin -> selain: STATUS CODE 200 OK, javascript-tiedosto
+selain->palvelin: GET https://fullstack-exampleapp.herokuapp.com/data.json
+note right of selain:
+Haetaan json-muodossa oleva datatiedosto palvelimelta,
+minkä dataa voidaan käyttää javascript-tiedostossa
+end note
+palvelin -> selain: STATUS CODE 200 OK, data.json-tiedosto
+selain->kayttaja:
+note left of selain
+selain palauttaa GET-kutsun jälkeen käyttäjälle
+verkkosivun, jonne main.js-ohjelmassa lisättiin
+palvelimelta saatua dataa.
