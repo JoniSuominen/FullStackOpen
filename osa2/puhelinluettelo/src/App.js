@@ -1,7 +1,8 @@
-import React from 'react';
+import React from 'react'
 import Person from './components/Person'
 import AddForm from './components/AddForm'
 import Filter from './components/Filter'
+import axios from 'axios'
 
 /*
     The exercise assumes we can only have one person with a same name, thus name could have
@@ -12,17 +13,21 @@ class App extends React.Component {
         super(props)
         this.state = {
             persons: [
-                {name: 'Arto Hellas', number: '040-512478', id : 1},
-                { name: 'Martti Tienari', number: '040-123456', id: 2 },
-                { name: 'Arto Järvinen', number: '040-123456', id: 3 },
-                { name: 'Lea Kutvonen', number: '040-123456', id: 4 }   
+
             ],
             newName: '',
             newNumber: '',
             filter : ''
         }
     }
-    ReactDo
+    
+    componentDidMount() {
+        axios
+            .get('http://localhost:3001/persons')
+            .then(response => {
+                this.setState({persons: response.data})
+            })
+    }
 
     handleNameChange = (event) => {
         this.setState({newName: event.target.value})
@@ -63,9 +68,6 @@ class App extends React.Component {
     }
     render() {
         const personsToShow = this.state.persons.filter(person => (person.name.toLowerCase()).includes(this.state.filter.toLowerCase()) || person.number.includes(this.state.filter)) 
-        console.log(this.state.filter)
-        console.log(this.state.persons.length)
-        console.log(personsToShow.length)
         return (
             <div>
                 <h2>Puhelinluettelo</h2>
