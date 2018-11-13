@@ -1,6 +1,7 @@
 import React from 'react'
 import Note from './components/Note'
 import axios from 'axios'
+import noteService from './services/notes'
 
 
 class App extends React.Component {
@@ -36,14 +37,33 @@ class App extends React.Component {
             content: this.state.newNote,
             date: new Date().toISOString(),
             important: Math.random() > 0.5,
-            id: this.state.notes.length + 1
-        }
-        const notes = this.state.notes.concat(noteObject)
 
-        this.setState({
-            notes,
-            newNote: ''
-        })
+        }
+        
+        axios.post('http://localhost:3001/notes', noteObject)
+            .then(response => {
+                this.setState({
+                    notes:  this.state.notes.concat(response.data),
+                    newNote: ''
+                })
+            })
+
+    }
+
+    toggleImportanceOf = (id) => {
+        return () => {
+            const note = this.state.notes.find(n => n.id == id)
+            const changedNote = {...note, important: !note.important}
+            console.log(`importance of  ${id} needs to be toggled`)
+
+            noteService
+                .getAll()
+                .update(id, changedNote)
+                .then(response => {
+                    this.setState({ notes: response.data  })
+                })
+            
+        }
     }
 
     render() {
@@ -63,7 +83,12 @@ class App extends React.Component {
                     </button>
                 </div>
                 <ul>   
-                    {notesToShow.map(note =><Note key={note.id} note={note}/>)}
+                    {notesToShow.map(note =>
+                    <Note 
+                    key={note.id} 
+                    note={note}
+                    toggleImportance={this.toggleImportanceOf(note.id)}
+                    />)}
                 </ul>
                 <form onSubmit={this.addNote}>
                     <input
