@@ -4,6 +4,7 @@ const Person = (props) => {
     return (
         <div>
             {props.name} {props.numero}
+            <button onClick={props.removePerson}>poista</button>
         </div>
     )
 }
