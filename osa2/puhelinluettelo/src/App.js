@@ -2,6 +2,8 @@ import React from 'react'
 import Person from './components/Person'
 import AddForm from './components/AddForm'
 import Filter from './components/Filter'
+import Notification from './components/Notification'
+import './index.css'
 import personServices from './services/persons'
 
 /*
@@ -17,7 +19,9 @@ class App extends React.Component {
             ],
             newName: '',
             newNumber: '',
-            filter : ''
+            filter : '',
+            lastOperation : null,
+            operationType: null
         }
     }
     
@@ -42,7 +46,7 @@ class App extends React.Component {
     }
 
     findName = (name) => {
-        const person = this.state.persons.map(person => person.name.toLowerCase() === name.toLowerCase())
+        const person = this.state.persons.filter(person => person.name.toLowerCase() === name.toLowerCase())
         console.log(person.length)
         return person.length > 0;
     }
@@ -58,10 +62,33 @@ class App extends React.Component {
             personServices 
                 .destroy(person.id)
                 .then(newPerson => {
-                    this.setState({
-                        persons: this.state.persons.filter(p => p.id !== id)
-                    })
 
+                    this.setState({
+                        persons: this.state.persons.filter(p => p.id !== id),
+                        lastOperation: `${person.name} poistettiin`,
+                        operationType: 'removal'
+                    })
+                    setTimeout(() => {
+                        this.setState({
+                            lastOperation: null,
+                            operationType: null
+                        })
+                      }, 3000)
+
+                })
+                .catch(error => {
+
+                    this.setState({
+                        persons: this.state.persons.filter(p => p.name !== person.name),
+                        lastOperation: `${person.name} on jo poistettu!`,
+                        operationType: 'removal'
+                    })
+                    setTimeout(()=> {
+                        this.setState({
+                            lastOperation: null,
+                            operationType: null
+                        })
+                    }, 3000)
                 })
         }
     }
@@ -85,24 +112,42 @@ class App extends React.Component {
             .then(newPerson => {
                 this.setState({
                     persons: this.state.persons.concat(newPerson),
+                    lastOperation: `${this.state.newName} lisättiin`,
+                    operationType: 'creation',
                     newName: '',
                     newNumber: ''
                 })
+                setTimeout(() => {
+                    this.setState({
+                        lastOperation: null,
+                        operationType: null
+                    })
+                  }, 3000)
             })
     }
 
     replaceNumber = (Person) => {
-        const prson = this.state.persons.find(p => p.name.toLowerCase() == Person.name.toLowerCase());
+        const prson = this.state.persons.find(p => p.name.toLowerCase() === Person.name.toLowerCase());
         Person.name = prson.name;
         console.log(prson.id);
         personServices
             .update(prson.id, Person)
             .then(response => {
-                const person = this.state.persons.filter(p => p.id != prson.id)
+                const person = this.state.persons.filter(p => p.id !== prson.id)
                 console.log(response.id)
                 this.setState({
-                    persons: person.concat(response)
+                    persons: person.concat(response),
+                    lastOperation: `Henkilön ${prson.name} numero vaihdettiin`,
+                    operationType: 'creation',
+                    newName: '',
+                    newNumber: ''
                 })
+                setTimeout(() => {
+                    this.setState({
+                        lastOperation: null,
+                        operationType: null
+                    })
+                  }, 3000)
             })
         
     }
@@ -111,6 +156,7 @@ class App extends React.Component {
         return (
             <div>
                 <h2>Puhelinluettelo</h2>
+                <Notification message={this.state.lastOperation} type={this.state.operationType}/>
                 <Filter handleFilterChange={this.handleFilterChange} filter={this.filter}/>
                 <AddForm submit={this.addName} name={this.state.newName} handleName={this.handleNameChange} number={this.state.newNumber} handleNumber={this.handleNumberChange}/>
                 <h2>
