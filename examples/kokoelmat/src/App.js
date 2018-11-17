@@ -1,6 +1,7 @@
 import React from 'react'
 import Note from './components/Note'
-import axios from 'axios'
+import './index.css'
+import Notification from './components/Notification'
 import noteService from './services/notes'
 
 
@@ -10,17 +11,18 @@ class App extends React.Component {
         this.state = {  
             notes: [],
             newNote: 'uusi muistiinpano...',
-            showAll: false
+            showAll: false,
+            error: null
         }
         console.log('constructor')
     }
     componentDidMount() {
         console.log('did mount')
-        axios
-            .get('http://localhost:3001/notes')
+        noteService
+            .getAll()
             .then(response => {
                 console.log('promise fullfilled')
-                this.setState({notes: response.data})
+                this.setState({notes: response})
             })
     }
     toggleVisible = () => {
@@ -40,10 +42,11 @@ class App extends React.Component {
 
         }
         
-        axios.post('http://localhost:3001/notes', noteObject)
-            .then(response => {
+        noteService
+            .create(noteObject)
+            .then(newNote => {
                 this.setState({
-                    notes:  this.state.notes.concat(response.data),
+                    notes:  this.state.notes.concat(newNote),
                     newNote: ''
                 })
             })
@@ -57,10 +60,23 @@ class App extends React.Component {
             console.log(`importance of  ${id} needs to be toggled`)
 
             noteService
-                .getAll()
                 .update(id, changedNote)
-                .then(response => {
-                    this.setState({ notes: response.data  })
+                .then(changedNote => {
+                    const notes = this.state.notes.filter(n => n.id != id)
+                    this.setState({
+                        notes: notes.concat(changedNote)
+                    })
+                })
+                .catch(error => {
+                    this.setState({
+                        error: `muistiinpano '${note.content}' on jo valitettavasti poistettu palvelimelta`,
+                        notes: this.state.notes.filter(n => n.id !== id)
+                    })
+                    setTimeout(() => {
+                        this.setState({
+                            error: null
+                        })
+                    }, 5000)
                 })
             
         }
@@ -77,6 +93,7 @@ class App extends React.Component {
         return (
             <div>
                 <h1>Muistiinpanot</h1>
+                <Notification message={this.state.error}/>
                 <div>
                     <button onClick ={this.toggleVisible}>
                     näytä {label}
