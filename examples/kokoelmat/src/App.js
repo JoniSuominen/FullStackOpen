@@ -55,14 +55,14 @@ class App extends React.Component {
 
     toggleImportanceOf = (id) => {
         return () => {
-            const note = this.state.notes.find(n => n.id == id)
+            const note = this.state.notes.find(n => n.id === id)
             const changedNote = {...note, important: !note.important}
             console.log(`importance of  ${id} needs to be toggled`)
 
             noteService
                 .update(id, changedNote)
                 .then(changedNote => {
-                    const notes = this.state.notes.filter(n => n.id != id)
+                    const notes = this.state.notes.filter(n => n.id !== id)
                     this.setState({
                         notes: notes.concat(changedNote)
                     })
