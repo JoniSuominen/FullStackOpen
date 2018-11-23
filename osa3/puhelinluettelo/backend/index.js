@@ -11,6 +11,7 @@ app.use(cors())
 app.use(bodyParser.json())
 morgan.token('data', function(req, res) {return JSON.stringify(req.body)})
 app.use(morgan(':method :url :data :status :res[content-length] - :response-time ms'))
+app.use(express.static('build'))
 
 let persons = [
     {
@@ -36,7 +37,7 @@ let persons = [
 ]
 
 app.get('/', (req, res) => {
-    res.send('<h1>:3001/api sisältää luettelon! </h1>')
+    res.send('<h1>/api/persons sisältää luettelon! </h1>')
 })
 
 app.get('/api/persons', (request, response) => {
