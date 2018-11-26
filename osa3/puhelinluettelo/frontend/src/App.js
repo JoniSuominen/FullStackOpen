@@ -47,13 +47,11 @@ class App extends React.Component {
 
     findName = (name) => {
         const person = this.state.persons.filter(person => person.name.toLowerCase() === name.toLowerCase())
-        console.log(person.length)
         return person.length > 0;
     }
 
     removePerson = (id) => {
         return () => {
-            console.log(id)
             const person = this.state.persons.find(p => p.id === id)
             if (!window.confirm(`poistetaanko ${person.name} `)) {
                 return;
@@ -129,12 +127,10 @@ class App extends React.Component {
     replaceNumber = (Person) => {
         const prson = this.state.persons.find(p => p.name.toLowerCase() === Person.name.toLowerCase());
         Person.name = prson.name;
-        console.log(prson.id);
         personServices
             .update(prson.id, Person)
             .then(response => {
                 const person = this.state.persons.filter(p => p.id !== prson.id)
-                console.log(response.id)
                 this.setState({
                     persons: person.concat(response),
                     lastOperation: `Henkilön ${prson.name} numero vaihdettiin`,
