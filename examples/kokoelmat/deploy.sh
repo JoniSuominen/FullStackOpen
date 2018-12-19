@@ -1,4 +1,4 @@
 #!/bin/sh
 npm run build
-rm -rf ../../examples/hellonode/build
-cp -r build ../../examples/hellonode
+rm -rf ../../examples/notes/build
+cp -r build ../../examples/notes
