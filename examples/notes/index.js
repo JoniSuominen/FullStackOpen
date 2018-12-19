@@ -6,6 +6,7 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const middleware = require('./utils/middleware')
 const notesRouter = require('./controllers/notes')
+const usersRouter = require('./controllers/users')
 const config = require('./utils/config')
 
 
@@ -31,7 +32,7 @@ app.use(express.static('build'))
 app.use(middleware.logger)
 
 app.use('/api/notes', notesRouter)
-
+app.use('/api/users', usersRouter)
 app.use(middleware.error)
 
 const server = http.createServer(app)

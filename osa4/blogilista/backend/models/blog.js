@@ -18,7 +18,7 @@ blogSchema.statics.format = function(blog, cb) {
     }   
 }
 
-blogSchema.statics.formatWithoutId = function(blog, cb) {
+blogSchema.statics.  = function(blog, cb) {
     return {
         title: blog.title,
         author: blog.author,
