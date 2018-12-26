@@ -1,9 +1,0 @@
-POST http://localhost:3001/api/blogs
-content-type: application/json
-
-{
-    "title": "Visual Studio Code on paras editori",
-    "author": "Joni Suominen",
-    "url": "http://tiko.blogs.tamk.fi/2018/11/27/tamkin-ja-muasin-yhteisprojekti-tyomotivaatiota-kehittamassa-pelillisyyden-avulla/",
-    "date": "Wed, 21 Oct 2015 18:27:50 GMT"
-}

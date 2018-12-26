@@ -5,7 +5,8 @@ var blogSchema = new Schema({
     title: String,
     author: String,
     url: String,
-    likes: Number
+    likes: Number,
+    user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 })
 
 blogSchema.statics.format = function(blog, cb) {
@@ -14,11 +15,12 @@ blogSchema.statics.format = function(blog, cb) {
         author: blog.author,
         url: blog.url,
         likes: blog.likes,
-        id: blog.id
+        id: blog.id,
+        user: blog.user
     }   
 }
 
-blogSchema.statics.  = function(blog, cb) {
+blogSchema.statics.formatWithoutId  = function(blog, cb) {
     return {
         title: blog.title,
         author: blog.author,
