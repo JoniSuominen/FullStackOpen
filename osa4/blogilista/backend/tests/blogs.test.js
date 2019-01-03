@@ -50,7 +50,7 @@ const listWithMultipleBlogs = [
   } 
 ]
 
-describe('total likes', () => {
+describe.skip('total likes', () => {
 
   test('when list has only one blog equals the likes of that', () => {
     const result = listHelper.totalLikes(listWithMultipleBlogs.slice(0, 1))
@@ -63,7 +63,7 @@ describe('total likes', () => {
   })
 })
 
-describe('favorite blog', () => {
+describe.skip('favorite blog', () => {
   test('when list has multiple blogs the favorite blog equals', () => {
     const result = listHelper.favoriteBlog(listWithMultipleBlogs)
     expect(result).toEqual(listWithMultipleBlogs[2])
@@ -71,7 +71,7 @@ describe('favorite blog', () => {
 
 })
 
-describe('most likes', () => {
+describe.skip('most likes', () => {
   test('when list has multiple blogs one blog has the most likes', () => {
     const result = listHelper.mostLikes(listWithMultipleBlogs)
     const author = {
@@ -81,7 +81,7 @@ describe('most likes', () => {
     expect(result).toEqual(author)
   })
 })
-test('dummy is called', () => {
+test.skip('dummy is called', () => {
   const blogs = []
 
   const result = listHelper.dummy(blogs)

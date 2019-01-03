@@ -3,13 +3,11 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 
-
 const getTokenFrom = (request) => {
   const authorization = request.get('authorization')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
     return authorization.substring(7)
   }
-
   return null
 }
 
@@ -26,22 +24,33 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
   try {
     const body = request.body
+    const token = getTokenFrom(request)
+    console.log(request.get('authorization'))
+    console.log(token)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
 
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-
-    if (!decodedToken.id) {
+    if (!token || !decodedToken.id) {
+      console.log("xd")
       return response.status(401).json({error: 'token missing or invalid'})
     }
 
     if (body.userId !== decodedToken.id) {
+      console.log("xd")
       return response.status(401).json({error: 'seperate user token id and user id'})
     }
 
     if (body.title === undefined || body.url === undefined) {
+      console.log("lol")
       return response.status(400).json({error: 'content missing'})
     }
 
+
     const user = await User.findById(decodedToken.id)
+
+    const users = await User.find({})
+    console.log(users.length)
+    console.log(decodedToken.id)
+    console.log(user.id)
     
     const blog = new Blog({
       title: body.title,
@@ -92,6 +101,7 @@ blogsRouter.delete('/:id', async (request, response) => {
 
 blogsRouter.put('/:id', async (request, response) => {
   try {
+
     const body = request.body
     const blog = {
       title: body.title,

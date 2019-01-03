@@ -7,32 +7,69 @@ const helper = require('./test_helper')
 
 
 
-describe('there are some blogs already', async () => {
-
+describe.only('there are some blogs already', async () => {
 
   beforeEach(async () => {
-    await Blog.remove()
+    await Blog.remove({})
     const blogObjects = helper.initialBlogs.map(blog => new Blog(blog))
-    const promiseArray = blogObjects.map(note => note.save())
-    await Promise.all(promiseArray)
+    const promiseArray = blogObjects.map(blog => blog.save())
+    await Promise.all(promiseArray) 
   })
   
   
+  describe('blog operations with logged in user', async () => {
+
+    let token
+    let addedUser
+
+    beforeAll(async () => {
+      await User.remove({})
+  
+      const user = {username: 'hehe', password: 'sekret', name: 'arto'};
+      addedUser = await api
+        .post('/api/users')
+        .send(user)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+      
+      const login = await api
+        .post('/api/login')
+        .send(user)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      token = login.body.token
+    })
+
+
   test('blogs are returned', async () => {
 
     await api
       .get('/api/blogs')
       .expect(200)
       .expect('Content-Type', /application\/json/)
+
   })
 
   describe('adding new blogs', async () => {
 
     test('adding new blogs works', async () => {
-  
+
+      console.log(token)
+      console.log(addedUser.body.id);
+      const data = {
+        token: token,
+        title: helper.blog.title,
+        author: helper.blog.author,
+        url: helper.blog.url,
+        likes: helper.blog.likes,
+        userId: addedUser.body.id
+      };
+
       await api
         .post('/api/blogs')
-        .send(helper.blog)
+        .send(data)
+        .set('Authorization', 'Bearer ' + token)
         .expect(200)
         .expect('Content-Type', /application\/json/)
         
@@ -44,7 +81,7 @@ describe('there are some blogs already', async () => {
       
     })
   
-    test('a blog with no likes can be added', async() => {
+    test.skip('a blog with no likes can be added', async() => {
       await api
         .post('/api/blogs')
         .send(helper.blogWithNoLikes)
@@ -59,7 +96,7 @@ describe('there are some blogs already', async () => {
       expect(contents).toContain(title)
             
     })
-    test('a blog with no title or url cant be added', async () => {
+    test.skip('a blog with no title or url cant be added', async () => {
       await api
         .post('/api/blogs')
         .send(helper.noTitleBlog)
@@ -74,7 +111,7 @@ describe('there are some blogs already', async () => {
     })
   
   })
-
+})
   describe('deleting blogs', async () => {
 
     test('DELETE /api/blogs/:id succeeds with proper statuscode', async () => {
@@ -138,9 +175,9 @@ describe('there are some blogs already', async () => {
 
     })
   })
+})
 
-
-describe.only('when there is initially one user at db', async () => {
+describe('when there is initially one user at db', async () => {
 
   beforeEach(async () => {
     await User.remove()
@@ -210,7 +247,5 @@ describe.only('when there is initially one user at db', async () => {
     const usersAfterOperation = await helper.usersInDb()
     expect(usersAfterOperation.length).toBe(usersBeforeOperation.length)
   })
-})
-
 })
 

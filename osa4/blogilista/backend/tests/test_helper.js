@@ -23,6 +23,12 @@ const blogWithNoLikes = {
 }
 
 
+const newUser = {
+  username: 'jonis',
+  name: 'Joni ',
+  password: 'sekret'
+}
+
 const blog = {
   title: 'Lint parantaa koodinkirjoitusta',
   author: 'Joni',
@@ -61,6 +67,7 @@ const usersInDb = async () => {
 }
 
 
+
 module.exports = {
-  initialBlogs, blogWithNoLikes, blog, blogsInDb, noTitleBlog, noUrlBlog, editedBlog, usersInDb
+  initialBlogs, blogWithNoLikes, blog, blogsInDb, noTitleBlog, noUrlBlog, editedBlog, usersInDb, newUser
 }

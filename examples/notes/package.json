@@ -1,7 +1,7 @@
 {
   "name": "notebackend",
   "version": "1.0.0",
-  "description": "",
+  "description": "notes example",
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
@@ -12,11 +12,12 @@
   "author": "Joni Suominen",
   "license": "MIT",
   "dependencies": {
-    "bcrypt": "^3.0.2",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "dotenv": "^6.1.0",
     "express": "^4.16.4",
+    "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.3.13"
   },
   "devDependencies": {
@@ -24,10 +25,16 @@
     "cross-env": "^5.2.0",
     "eslint": "^5.9.0",
     "jest": "^23.6.0",
-    "nodemon": "^1.18.6",
+    "nodemon": "^1.18.9",
     "supertest": "^3.3.0"
   },
   "jest": {
     "testEnvironment": "node"
-  }
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "keywords": [
+    "node.js"
+  ]
 }
