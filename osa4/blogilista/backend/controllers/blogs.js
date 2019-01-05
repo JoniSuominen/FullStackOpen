@@ -84,7 +84,7 @@ blogsRouter.delete('/:id', async (request, response) => {
       return response.status(401).json({error: 'token missing or invalid'})
     }
     
-    if (decodedToken.id !== blog.user.toString()) {
+    if (decodedToken.id.toString() !== blog.user.toString()) {
       return response.status(401).json({error: 'seperate user token id and user id'})
     }
 

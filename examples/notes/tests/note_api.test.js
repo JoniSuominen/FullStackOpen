@@ -88,7 +88,7 @@ describe('when there is initially some notes saved', async () => {
       }
 
       const notesAtStart = await notesInDb()
-
+      
       await api
         .post('/api/notes')
         .send(newNote)

@@ -11,6 +11,7 @@ const config = require('./utils/config')
 const http = require('http')
 
 
+console.log(config.mongoUrl)
 
 mongoose
   .connect(config.mongoUrl)

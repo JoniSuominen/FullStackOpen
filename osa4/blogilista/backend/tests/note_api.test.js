@@ -7,7 +7,7 @@ const helper = require('./test_helper')
 
 
 
-describe.only('there are some blogs already', async () => {
+describe('there are some blogs already', async () => {
 
   beforeEach(async () => {
     await Blog.remove({})
@@ -42,106 +42,134 @@ describe.only('there are some blogs already', async () => {
     })
 
 
-  test('blogs are returned', async () => {
-
-    await api
-      .get('/api/blogs')
-      .expect(200)
-      .expect('Content-Type', /application\/json/)
-
-  })
-
-  describe('adding new blogs', async () => {
-
-    test('adding new blogs works', async () => {
-
-      console.log(token)
-      console.log(addedUser.body.id);
-      const data = {
-        token: token,
-        title: helper.blog.title,
-        author: helper.blog.author,
-        url: helper.blog.url,
-        likes: helper.blog.likes,
-        userId: addedUser.body.id
-      };
+    test('blogs are returned', async () => {
 
       await api
-        .post('/api/blogs')
-        .send(data)
-        .set('Authorization', 'Bearer ' + token)
+        .get('/api/blogs')
         .expect(200)
         .expect('Content-Type', /application\/json/)
+
+    })
+
+    describe('adding new blogs', async () => {
+
+      test('adding new blogs works', async () => {
+
+        console.log(token)
+        console.log(addedUser.body.id);
+        const data = {
+          title: helper.blog.title,
+          author: helper.blog.author,
+          url: helper.blog.url,
+          likes: helper.blog.likes,
+          userId: addedUser.body.id
+        };
+
+        await api
+          .post('/api/blogs')
+          .send(data)
+          .set('Authorization', 'Bearer ' + token)
+          .expect(200)
+          .expect('Content-Type', /application\/json/)
+          
+        const response = await helper.blogsInDb()
+        const contents = response.map(Blog.formatWithoutId)
+    
+        expect(response.length).toBe(helper.initialBlogs.length + 1)
+        expect(contents).toContainEqual(helper.blog)
         
-      const response = await helper.blogsInDb()
-      const contents = response.map(Blog.formatWithoutId)
-  
-      expect(response.length).toBe(helper.initialBlogs.length + 1)
-      expect(contents).toContainEqual(helper.blog)
-      
-    })
-  
-    test.skip('a blog with no likes can be added', async() => {
-      await api
-        .post('/api/blogs')
-        .send(helper.blogWithNoLikes)
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
-  
-      const response = await helper.blogsInDb()
-      const contents = response.map(b => b.title)
-  
-      expect(response.length).toBe(helper.initialBlogs.length + 1)
-      const title = helper.blogWithNoLikes.title
-      expect(contents).toContain(title)
-            
-    })
-    test.skip('a blog with no title or url cant be added', async () => {
-      await api
-        .post('/api/blogs')
-        .send(helper.noTitleBlog)
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
-  
-      await api
-        .post('/api/blogs')
-        .send(helper.noUrlBlog)
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
-    })
-  
-  })
-})
-  describe('deleting blogs', async () => {
-
-    test('DELETE /api/blogs/:id succeeds with proper statuscode', async () => {
-
-
-      let addedBlog = new Blog({
-        title: 'Hello',
-        author: 'tester',
-        url: 'randomperson.org',
-        likes: 2
       })
-      await addedBlog.save()
+    
+      test('a blog with no likes can be added', async() => {
 
-      const blogsBefore = await helper.blogsInDb()
+        const data = {
+          title: helper.blogWithNoLikes.title,
+          author: helper.blogWithNoLikes.author,
+          url: helper.blogWithNoLikes.url,
+          userId: addedUser.body.id
+        }
 
+        await api
+          .post('/api/blogs')
+          .send(data)
+          .set('Authorization', 'Bearer ' + token)
+          .expect(200)
+          .expect('Content-Type', /application\/json/)
+    
+        const response = await helper.blogsInDb()
+        const contents = response.map(b => b.title)
+    
+        expect(response.length).toBe(helper.initialBlogs.length + 1)
+        const title = helper.blogWithNoLikes.title
+        expect(contents).toContain(title)
+              
+      })
+      test('a blog with no title or url cant be added', async () => {
+        const noTitleData = helper.noTitleBlog
+        noTitleData.userId = addedUser.body.id
 
-      const id = addedBlog._id
-      const url = `/api/blogs/${id}`
+        await api
+          .post('/api/blogs')
+          .send(noTitleData)
+          .set('Authorization', 'Bearer ' + token)
+          .expect(400)
+          .expect('Content-Type', /application\/json/)
 
-      await api
-        .delete(url)
-        .expect(204)
-
-      const blogsAfter = await helper.blogsInDb()
-      
-      const contents = blogsAfter.map(b => b.title)
-
-      expect(contents).not.toContain(helper.tile)
-      expect(blogsAfter.length).toBe(blogsBefore.length - 1)
+        const noUrlData = helper.noUrlBlog
+        noUrlData.userId = addedUser.body.id
+    
+        await api
+          .post('/api/blogs')
+          .send(noUrlData)
+          .set('Authorization', 'Bearer ' + token)
+          .expect(400)
+          .expect('Content-Type', /application\/json/)
+      })
+    
     })
+    describe('deleting blogs', async () => {
+
+      test('DELETE /api/blogs/:id succeeds with proper statuscode', async () => { 
+        console.log('hei!')
+
+        let addedBlog = {
+          title: 'Hello',
+          author: 'tester',
+          url: 'randomperson.org',
+          likes: 2,
+          userId: addedUser.body.id
+        }
+
+        console.log(addedBlog.userId)
+
+        const newBlog = await api
+          .post('/api/blogs')
+          .send(addedBlog)
+          .set('Authorization', 'Bearer ' + token)
+          .expect(200)
+          .expect('Content-Type', /application\/json/)
+
+        const blogsBefore = await helper.blogsInDb()
+
+
+        const id = newBlog.body.id
+        console.log(newBlog.body.id)
+        const url = `/api/blogs/${id}`
+
+        await api
+          .delete(url)
+          .set('Authorization', 'Bearer ' + token)
+          .expect(204)
+
+        const blogsAfter = await helper.blogsInDb()
+        
+        const contents = blogsAfter.map(b => b.title)
+
+        expect(contents).not.toContain(helper.tile)
+        expect(blogsAfter.length).toBe(blogsBefore.length - 1)
+      })
+    })
+
   })
 
   describe('modifying blogs', async () => {

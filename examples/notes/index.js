@@ -11,15 +11,20 @@ const loginRouter = require('./controllers/login')
 const config = require('./utils/config')
 
 
+
+
+
+
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
-}
+} 
 
 
 const url = config.mongoUrl
+console.log(url)
 
 mongoose
-  .connect(url)
+  .connect(url, { useNewUrlParser: true })
   .then(() => {
     console.log('connected to database', config.mongoUrl)
   })
