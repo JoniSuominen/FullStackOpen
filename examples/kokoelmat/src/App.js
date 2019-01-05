@@ -3,6 +3,11 @@ import Note from './components/Note'
 import './index.css'
 import Notification from './components/Notification'
 import noteService from './services/notes'
+import loginService from './services/login'
+import Login from './components/LoginForm'
+import NoteForm from './components/NoteForm'
+
+console.log('qdjiwqdjiwqodjqwo')
 
 
 class App extends React.Component {
@@ -12,10 +17,15 @@ class App extends React.Component {
             notes: [],
             newNote: 'uusi muistiinpano...',
             showAll: false,
-            error: null
+            error: null,
+            username: '',
+            password: '',
+            user: null,
+            loginVisible: false
         }
         console.log('constructor')
     }
+
     componentDidMount() {
         console.log('did mount')
         noteService
@@ -24,14 +34,15 @@ class App extends React.Component {
                 console.log('promise fullfilled')
                 this.setState({notes: response})
             })
+
+        const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+        if (loggedUserJSON) {
+          const user = JSON.parse(loggedUserJSON)
+          this.setState({user})
+          noteService.setToken(user.token)
+        }
     }
-    toggleVisible = () => {
-        this.setState({showAll: !this.state.showAll})
-    }
-    handleNoteChange = (event) => {
-        console.log(event.target.value)
-        this.setState({newNote: event.target.value})
-    }
+
 
     addNote = (event) => {
         event.preventDefault()
@@ -51,6 +62,43 @@ class App extends React.Component {
                 })
             })
 
+    }
+
+    login = async (event) => {
+      event.preventDefault()
+      console.log('logging in with', this.state.username, this.state.password)
+
+      try {
+        const user = await loginService.login({
+          username: this.state.username,
+          password: this.state.password
+        })
+
+        window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
+        noteService.setToken(user.token)
+        this.setState({username: '', password: '', user})
+      } catch (exception) {
+        this.setState({
+          error: 'käyttäjätunnus tai salasana virheellinen'
+        })
+        setTimeout(() => {
+          this.setState({ error: null })
+        }, 5000)
+      }
+    }
+
+    handleNoteChange = (event) => {
+      console.log(event.target.value)
+      this.setState({newNote: event.target.value})
+    }
+
+    handleFieldChange = (event) => {
+      this.setState({[event.target.name]: event.target.value})
+    }
+    
+  
+    toggleVisible = () => {
+      this.setState({showAll: !this.state.showAll})
     }
 
     toggleImportanceOf = (id) => {
@@ -90,10 +138,41 @@ class App extends React.Component {
                 this.state.notes.filter(note => note.important)
 
         const label = this.state.showAll ? 'vain tärkeät' : 'kaikki'
+        
+        const loginForm = () => {
+          const hideWhenVisible = {display: this.state.loginVisible ? 'none': ''}
+          const showWhenVisible = {display : this.state.loginVisible ? '' : 'none'}
+          return (
+              <div>
+                <div style = {hideWhenVisible}>
+                  <button onClick={e => this.setState({ loginVisible: true})}>log in</button>
+                </div>
+                <div style ={showWhenVisible}>
+                <Login 
+                  loginHandler = {this.login} 
+                  username = {this.state.username} 
+                  password = {this.state.password} 
+                  handleFieldChange = {this.handleFieldChange}
+                />
+                <button onClick={e => this.setState({ loginVisible: false })}>cancel</button>
+                </div>
+              </div>
+          )
+        }
+        
         return (
             <div>
                 <h1>Muistiinpanot</h1>
                 <Notification message={this.state.error}/>
+
+                {this.state.user === null ?
+                loginForm() :
+                <div>
+                  <p> {this.state.user.name} logged in </p>
+                  <NoteForm addNote={this.addNote} newNote={this.state.newNote} handleNoteChange={this.handleNoteChange} />
+                </div>
+                }
+                <h2>Muistiinpanot</h2>
                 <div>
                     <button onClick ={this.toggleVisible}>
                     näytä {label}
@@ -107,13 +186,6 @@ class App extends React.Component {
                     toggleImportance={this.toggleImportanceOf(note.id)}
                     />)}
                 </ul>
-                <form onSubmit={this.addNote}>
-                    <input
-                    value={this.state.newNote}
-                    onChange={this.handleNoteChange}
-                    />
-                    <button type="submit">tallenna</button>
-                </form>
             </div>
         );
     }
