@@ -39,7 +39,7 @@ blogsRouter.post('/', async (request, response) => {
       return response.status(401).json({error: 'seperate user token id and user id'})
     }
 
-    if (body.title === undefined || body.url === undefined) {
+    if (!body.title ) {
       console.log("lol")
       return response.status(400).json({error: 'content missing'})
     }
@@ -55,7 +55,7 @@ blogsRouter.post('/', async (request, response) => {
     const blog = new Blog({
       title: body.title,
       author: body.author,
-      url: body.url,
+      url: body.url || '',
       likes: body.likes || 0,
       user: user._id
     })
@@ -84,8 +84,12 @@ blogsRouter.delete('/:id', async (request, response) => {
       return response.status(401).json({error: 'token missing or invalid'})
     }
     
-    if (decodedToken.id !== blog.user.toString()) {
+    if (decodedToken.id !== blog.user.toString() && blog.user.toString()) {
       return response.status(401).json({error: 'seperate user token id and user id'})
+    }
+
+    if (decodedToken.Id && !blog.user.toString()) {
+      return response.status(401).json({error: 'you must be logged in'})
     }
 
 

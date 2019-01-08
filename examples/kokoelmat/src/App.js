@@ -4,8 +4,9 @@ import './index.css'
 import Notification from './components/Notification'
 import noteService from './services/notes'
 import loginService from './services/login'
-import Login from './components/LoginForm'
+import LoginForm from './components/LoginForm'
 import NoteForm from './components/NoteForm'
+import Togglable from './components/Togglable'
 
 console.log('qdjiwqdjiwqodjqwo')
 
@@ -61,6 +62,8 @@ class App extends React.Component {
                     newNote: ''
                 })
             })
+
+            this.noteForm.toggleVisibility()
 
     }
 
@@ -139,26 +142,27 @@ class App extends React.Component {
 
         const label = this.state.showAll ? 'vain tärkeät' : 'kaikki'
         
-        const loginForm = () => {
-          const hideWhenVisible = {display: this.state.loginVisible ? 'none': ''}
-          const showWhenVisible = {display : this.state.loginVisible ? '' : 'none'}
-          return (
-              <div>
-                <div style = {hideWhenVisible}>
-                  <button onClick={e => this.setState({ loginVisible: true})}>log in</button>
-                </div>
-                <div style ={showWhenVisible}>
-                <Login 
-                  loginHandler = {this.login} 
-                  username = {this.state.username} 
-                  password = {this.state.password} 
-                  handleFieldChange = {this.handleFieldChange}
-                />
-                <button onClick={e => this.setState({ loginVisible: false })}>cancel</button>
-                </div>
-              </div>
-          )
-        }
+        const noteForm = () => (
+          <Togglable buttonLabel="new note" ref={component => this.noteForm = component}>
+            <NoteForm
+              addNote={this.addNote} 
+              newNote={this.state.newNote} 
+              handleNoteChange={this.handleNoteChange}
+         
+            />
+          </Togglable>
+        )
+
+        const loginForm = () => (
+          <Togglable buttonLabel="login">
+          <LoginForm
+            username={this.state.username}
+            password={this.state.password}
+            loginHandler={this.login}
+            handleFieldChange={this.handleFieldChange}
+          />
+          </Togglable>
+        )
         
         return (
             <div>
@@ -169,7 +173,7 @@ class App extends React.Component {
                 loginForm() :
                 <div>
                   <p> {this.state.user.name} logged in </p>
-                  <NoteForm addNote={this.addNote} newNote={this.state.newNote} handleNoteChange={this.handleNoteChange} />
+                  {noteForm()}
                 </div>
                 }
                 <h2>Muistiinpanot</h2>

@@ -9,7 +9,7 @@ const NoteForm = ({addNote, newNote, handleNoteChange}) => (
         value={newNote}
         onChange={handleNoteChange}
       />
-      <button>tallenna</button>
+      <button type="submit">tallenna</button>
     </form>
   </div>
 )
