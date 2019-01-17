@@ -6,6 +6,7 @@ import LoginForm from './components/LoginForm'
 import './index.css'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
 class App extends React.Component {
   constructor(props) {
@@ -80,7 +81,7 @@ class App extends React.Component {
 
   logout = (event) => {
     event.preventDefault()
-    window.localStorage.removeItem('loggedNoteappUser')
+    window.localStorage.removeItem('loggedBlogAppUser')
     this.setState({
       user: null,
       notification: 'You have logged off',
@@ -123,14 +124,14 @@ class App extends React.Component {
       <div>
         <h2>Blogilista</h2>
         <Notification message={this.state.notification} type={this.state.notificationType}/>
-         {this.state.user === null ? <LoginForm onFieldChange={this.handleFieldChange} username={this.state.username} password={this.state.password} loginHandler={this.login}/>:  
+         {this.state.user === null ? <Togglable buttonLabel="login"><LoginForm onFieldChange={this.handleFieldChange} username={this.state.username} password={this.state.password} loginHandler={this.login}/></Togglable>:  
         <div>
 
           <p>{this.state.user.name} logged in</p>
           <button onClick={this.logout}>log off</button>
           <BlogForm addBlog={this.addNewBlog} newBlog={this.state.blog} handleBlogChange={this.handleFieldChange}/>
           {this.state.blogs.map(blog => 
-          <Blog key={blog._id} blog={blog}/>
+            <Blog key={blog._id} blog={blog}/>
         )}
         </div>
          }
