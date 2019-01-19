@@ -78,7 +78,6 @@ blogsRouter.delete('/:id', async (request, response) => {
 
     const blog = await Blog.findById(request.params.id)
 
-    console.log('\n')
     console.log(blog.user.toString())
     if (!decodedToken.id) {
       return response.status(401).json({error: 'token missing or invalid'})
@@ -88,7 +87,7 @@ blogsRouter.delete('/:id', async (request, response) => {
       return response.status(401).json({error: 'seperate user token id and user id'})
     }
 
-    if (decodedToken.Id && !blog.user.toString()) {
+    if (!decodedToken.Id && !blog.user.toString()) {
       return response.status(401).json({error: 'you must be logged in'})
     }
 

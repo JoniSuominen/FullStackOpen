@@ -79,6 +79,23 @@ class App extends React.Component {
   }
 
 
+  deleteBlog = (blogId) => async () => {
+    console.log(blogId)
+    try {
+      if (!window.confirm(`Do you want to delete blog ${blogId.title}`)) {
+        return;
+      }
+      await blogService.deleteBlog(blogId._id)
+      const newblogs = this.state.blogs.filter(b => b._id !== blogId._id)
+      this.setState({blogs: newblogs})
+      console.log('success')
+
+    } catch(exception) {
+      console.log(exception)
+    }
+  }
+
+
   logout = (event) => {
     event.preventDefault()
     window.localStorage.removeItem('loggedBlogAppUser')
@@ -119,7 +136,41 @@ class App extends React.Component {
     this.removeNotification()
   }
 
+  likeBlog = (blog) => async () => {
+    console.log('hei')
+    try {
+      console.log(blog.title)
+      const newBlog = await blogService.update({
+        title: blog.title,
+        url: blog.url,
+        author: blog.author,
+        id: blog._id,
+        likes: blog.likes + 1
+      })
+
+      let newBlogs = this.state.blogs.filter(b => b._id !== blog._id);
+      console.log(newBlogs.length)
+      newBlogs.push(newBlog)
+      console.log(newBlogs.length)
+      this.setState({blogs: newBlogs})
+      this.setState({
+        notification: 'Succesfully liked a blog', 
+        notificationType: 'success'
+      })
+      
+    } catch (exception) {
+      this.setState({
+        notification: 'Error liking a blog',
+        notificationType: 'error'
+      })
+    }
+    this.removeNotification()
+  }
+
   render() {
+    const blogs = this.state.blogs.sort(function(a,b ) {
+      return b.likes - a.likes;
+    })
     return (
       <div>
         <h2>Blogilista</h2>
@@ -130,8 +181,8 @@ class App extends React.Component {
           <p>{this.state.user.name} logged in</p>
           <button onClick={this.logout}>log off</button>
           <BlogForm addBlog={this.addNewBlog} newBlog={this.state.blog} handleBlogChange={this.handleFieldChange}/>
-          {this.state.blogs.map(blog => 
-            <Blog key={blog._id} blog={blog}/>
+          {blogs.map(blog => 
+            <Blog key={blog._id} blog={blog} likeBlog={this.likeBlog} delete={this.deleteBlog} id={this.state.user.id}/>
         )}
         </div>
          }

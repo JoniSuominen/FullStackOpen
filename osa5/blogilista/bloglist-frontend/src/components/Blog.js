@@ -16,6 +16,7 @@ class Blog extends React.Component {
     const hideWhenVisible = {display: this.state.visible ? 'none' : ''}
     const showWhenVisible = {display: this.state.visible ? '' : 'none' }
 
+    const showWhenOwn = {display: !this.props.blog.user || this.props.blog.user._id === this.props.id   ? '' : 'none'}
     const blogStyle = {
       paddingTop: 10,
       paddingLeft: 2,
@@ -24,19 +25,19 @@ class Blog extends React.Component {
       marginBottom: 5,
       marginTop: 5
     }
-
     return (
-      <div onClick={this.toggleVisibility} style={blogStyle}>
+      <div onClick={this.toggleVisibility} style={blogStyle} className="wrapper">
         {
           this.state.visible ? 
         <div style={showWhenVisible}>
-          <div> {this.props.blog.title}</div>
-          <div> {this.props.blog.url}</div>
-          <div>{this.props.blog.likes} <button> like </button></div>
-          <div>added by {this.props.blog.author}</div>
+          <div className="title"> {this.props.blog.title}</div>
+          <div className="url"> {this.props.blog.url}</div>
+          <div className="likes">{this.props.blog.likes} <button onClick={this.props.likeBlog(this.props.blog)}> like </button></div>
+          <div className="author">added by {this.props.blog.author}</div>
+          <div> <button onClick={this.props.delete(this.props.blog) }style={showWhenOwn}>Delete</button></div>
         </div>
         :
-        <div style={hideWhenVisible}> {this.props.blog.title} {this.props.blog.author} </div>
+        <div style={hideWhenVisible} className="basicInfo"> {this.props.blog.title} {this.props.blog.author} </div>
       }
       </div>
     )
