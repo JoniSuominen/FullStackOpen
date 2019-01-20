@@ -175,7 +175,7 @@ class App extends React.Component {
       <div>
         <h2>Blogilista</h2>
         <Notification message={this.state.notification} type={this.state.notificationType}/>
-         {this.state.user === null ? <Togglable buttonLabel="login"><LoginForm onFieldChange={this.handleFieldChange} username={this.state.username} password={this.state.password} loginHandler={this.login}/></Togglable>:  
+         {this.state.user === null ? <Togglable buttonLabel="login" className="login"><LoginForm onFieldChange={this.handleFieldChange} username={this.state.username} password={this.state.password} loginHandler={this.login} className="form"/></Togglable>:  
         <div>
 
           <p>{this.state.user.name} logged in</p>

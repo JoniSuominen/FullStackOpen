@@ -8,8 +8,6 @@ import LoginForm from './components/LoginForm'
 import NoteForm from './components/NoteForm'
 import Togglable from './components/Togglable'
 
-console.log('qdjiwqdjiwqodjqwo')
-
 
 class App extends React.Component {
     constructor(props) {
@@ -17,32 +15,30 @@ class App extends React.Component {
         this.state = {  
             notes: [],
             newNote: 'uusi muistiinpano...',
-            showAll: false,
+            showAll: true,
             error: null,
             username: '',
             password: '',
-            user: null,
-            loginVisible: false
-        }
-        console.log('constructor')
-    }
-
-    componentDidMount() {
-        console.log('did mount')
-        noteService
-            .getAll()
-            .then(response => {
-                console.log('promise fullfilled')
-                this.setState({notes: response})
-            })
-
-        const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
-        if (loggedUserJSON) {
-          const user = JSON.parse(loggedUserJSON)
-          this.setState({user})
-          noteService.setToken(user.token)
+            user: null
         }
     }
+
+    componentWillMount() {
+      noteService
+        .getAll()
+        .then(notes => {
+          this.setState({ notes })
+        })
+  
+      const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+      if (loggedUserJSON) {
+        const user = JSON.parse(loggedUserJSON)
+        this.setState({ user })
+        noteService.setToken(user.token)
+      }    
+    }
+  
+  
 
 
     addNote = (event) => {
@@ -63,7 +59,6 @@ class App extends React.Component {
                 })
             })
 
-            this.noteForm.toggleVisibility()
 
     }
 
@@ -191,7 +186,7 @@ class App extends React.Component {
                     />)}
                 </ul>
             </div>
-        );
+        )
     }
 }
 
